@@ -1,48 +1,66 @@
-# Conversor de Excel
+# Automatización de Exámenes Ocupacionales
 
-Script de línea de comandos que convierte archivos Excel con datos de pacientes en planillas formateadas con columnas por tipo de estudio.
+## El problema
+
+Las empresas de medicina laboral reciben planillas de derivación con filas repetidas por empleado y por tipo de estudio. Transformar eso manualmente en una planilla consolidada por empresa — con una columna por estudio y una X donde corresponde — tomaba tiempo considerable y era propenso a errores humanos.
+
+Este script elimina ese proceso por completo.
+
+## Qué hace
+
+**Entrada:** archivo Excel con una fila por cada combinación empleado-estudio
+
+**Salida:** planilla formateada con:
+- Datos de empresa extraídos automáticamente (razón social, CUIT, domicilio, email)
+- Una fila por empleado, ordenados alfabéticamente
+- Una columna por tipo de estudio con X donde corresponde
+- Formato profesional listo para entregar
+
+> Desarrollado y usado en producción para una empresa de medicina laboral de Buenos Aires.
+
+## Demo
+
+**Entrada:**
+
+![Excel de entrada](imagen_entrada.png)
+
+**Salida generada automáticamente:**
+
+![Excel de salida](imagen_salida.png)
 
 ## Instalación
-
 ```bash
 pip install -r requirements.txt
 ```
 
-`xlwings` es opcional (autowidth de columnas). `openpyxl` es opcional pero recomendado para formato profesional.
+`openpyxl` aplica formato profesional. `xlwings` ajusta el ancho de columnas automáticamente (opcional).
 
 ## Uso
 
 Colocá los archivos `.xlsx` o `.xls` en la misma carpeta que `main.py` y ejecutá:
-
 ```bash
 python main.py
 ```
 
 Los archivos de salida se generan en la misma carpeta con el prefijo `output_sorted_`.
 
-## Qué hace
-
-- Lee todos los `.xlsx`/`.xls` de la carpeta (ignora los que empiezan con `output_` o `~$`)
-- Extrae datos de empresa de posiciones fijas del Excel
-- Procesa pacientes por CUIL, ordenados alfabéticamente A-Z
-- Genera una planilla con columnas por tipo de estudio y una `X` donde corresponde
-- Si `openpyxl` está disponible aplica formato profesional; si no, usa pandas como fallback
-- Si `xlwings` está disponible aplica autowidth a las columnas
-
-## Estructura
-
+## Estructura del proyecto
 ```
-conversor_excel/
 ├── main.py
 ├── requirements.txt
 ├── core/
-│   ├── patients.py        ← extracción y procesamiento de pacientes
-│   ├── processor.py       ← orquestador del flujo completo
-│   └── file_utils.py      ← búsqueda de archivos y autowidth
+│   ├── patients.py       ← extracción y procesamiento de empleados
+│   ├── processor.py      ← orquestador del flujo completo
+│   └── file_utils.py     ← búsqueda de archivos y autowidth
 └── writers/
-    ├── openpyxl_writer.py ← escritura con formato profesional
-    └── pandas_writer.py   ← escritura básica (fallback)
+    ├── openpyxl_writer.py  ← escritura con formato profesional
+    └── pandas_writer.py    ← escritura básica (fallback)
 ```
 
+## Stack
+
+Python · Pandas · OpenPyXL
+
 ---
-Creado por [Gustavo Plaza](https://github.com/plazagustavo)
+
+Desarrollado por [Gustavo Plaza](https://github.com/plazagustavo)
